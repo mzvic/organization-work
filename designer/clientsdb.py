@@ -3,8 +3,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 import os, sys
- 
-
+import sqlite3 as sql
+cwd = os.getcwd()
+con = sql.connect("designer/db/sql.db")
+cur = con.cursor()
 
 
 class Ui_clientsdatabase(object):
@@ -35,12 +37,19 @@ class Ui_clientsdatabase(object):
         font.setBold(True)
         font.setWeight(20)
         self.list.setFont(font)
-        with open(str(os.getcwd()) + '/db/clients.txt') as db:
-            global i
-            i = 0
-            for j in db:
-                self.list.insertItem(i, j)
-                i+=1
+        cur.execute("SELECT * FROM clientsdb")
+        datos = cur.fetchall()
+        i = 0
+        for j in datos:
+            self.list.insertItem(i, j)
+            i+=1
+        # with open(cwd + '/db/clients.txt') as db:
+        #     global i
+        #     i = 0
+        #     for j in db:
+        #         if j != '\n':
+        #             self.list.insertItem(i, j)
+        #         i+=1
                 
         #################### NEW client INPUT ############################
         self.new_client_text = QtWidgets.QPlainTextEdit(self.centralwidget)
@@ -60,7 +69,7 @@ class Ui_clientsdatabase(object):
         self.add_client.setObjectName("add_client")
 
         def add_to_list():
-            with open(str(os.getcwd()) + '/db/clients.txt', 'r') as db:
+            with open(cwd + '/db/clients.txt', 'r') as db:
                 new_client_value = self.new_client_text.toPlainText() + '\n'
                 if new_client_value == '\n':
                     pass
@@ -70,7 +79,7 @@ class Ui_clientsdatabase(object):
                 #         msg_box_name.setIcon(QMessageBox.Information) 
                 #         msg_box_name.show()
                 else:
-                    with open(str(os.getcwd()) + '/db/clients.txt', 'a') as db:
+                    with open(cwd + '/db/clients.txt', 'a') as db:
                         global i
                         i+=1
                         self.list.insertItem(i, self.new_client_text.toPlainText())
@@ -85,15 +94,15 @@ class Ui_clientsdatabase(object):
         self.delete_client.setObjectName("delete_client")
         
         def delete_client():
-            with open(str(os.getcwd()) + '/db/clients.txt', 'r') as db: ####READ DB
+            with open(cwd + '/db/clients.txt', 'r') as db: ####READ DB
                 lines = db.readlines()
-            with open(str(os.getcwd()) + '/db/clients.txt', 'w') as db: ####REWRITE DB WITHOUT VALUE
+            with open(cwd + '/db/clients.txt', 'w') as db: ####REWRITE DB WITHOUT VALUE
                 value = str(self.list.currentItem().text())
                 for line in lines:
                     if line != value:
                         db.write(line)
             self.list.clear()                                        ####CLEAR LIST WIDGET
-            with open(str(os.getcwd()) + '/db/clients.txt') as db:      ####WRITE ITEM IN DB
+            with open(cwd + '/db/clients.txt') as db:      ####WRITE ITEM IN DB
                 global i
                 i = 0
                 for j in db:
@@ -129,4 +138,6 @@ if __name__ == "__main__":
     ui = Ui_clientsdatabase()
     ui.setupUi(clientsdatabase)
     clientsdatabase.show()
+    con.commit()
+    con.close()
     sys.exit(app.exec_())

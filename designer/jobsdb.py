@@ -3,9 +3,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 import os, sys
-import ctypes  # An included library with Python install.   
-
-
+cwd = os.getcwd()  
 
 class Ui_Jobsdatabase(object):
     def setupUi(self, Jobsdatabase):
@@ -35,11 +33,13 @@ class Ui_Jobsdatabase(object):
         font.setBold(True)
         font.setWeight(20)
         self.list.setFont(font)
-        with open(str(os.getcwd()) + '/db/jobs.txt') as db:
+        
+        with open(cwd + '/db/jobs.txt') as db:
             global i
             i = 0
             for j in db:
-                self.list.insertItem(i, j)
+                if j != '\n':
+                    self.list.insertItem(i, j)
                 i+=1
                 
         #################### NEW JOB INPUT ############################
@@ -60,7 +60,7 @@ class Ui_Jobsdatabase(object):
         self.add_job.setObjectName("add_job")
 
         def add_to_list():
-            with open(str(os.getcwd()) + '/db/jobs.txt', 'r') as db:
+            with open(cwd + '/db/jobs.txt', 'r') as db:
                 new_job_value = self.new_job_text.toPlainText() + '\n'
                 if new_job_value == '\n':
                     pass
@@ -70,7 +70,7 @@ class Ui_Jobsdatabase(object):
                 #         msg_box_name.setIcon(QMessageBox.Information) 
                 #         msg_box_name.show()
                 else:
-                    with open(str(os.getcwd()) + '/db/jobs.txt', 'a') as db:
+                    with open(cwd + '/db/jobs.txt', 'a') as db:
                         global i
                         i+=1
                         self.list.insertItem(i, self.new_job_text.toPlainText())
@@ -85,15 +85,15 @@ class Ui_Jobsdatabase(object):
         self.delete_job.setObjectName("delete_job")
         
         def delete_job():
-            with open(str(os.getcwd()) + '/db/jobs.txt', 'r') as db: ####READ DB
+            with open(cwd + '/db/jobs.txt', 'r') as db: ####READ DB
                 lines = db.readlines()
-            with open(str(os.getcwd()) + '/db/jobs.txt', 'w') as db: ####REWRITE DB WITHOUT VALUE
+            with open(cwd + '/db/jobs.txt', 'w') as db: ####REWRITE DB WITHOUT VALUE
                 value = str(self.list.currentItem().text())
                 for line in lines:
                     if line != value:
                         db.write(line)
             self.list.clear()                                        ####CLEAR LIST WIDGET
-            with open(str(os.getcwd()) + '/db/jobs.txt', 'r') as db:      ####WRITE ITEM IN DB
+            with open(cwd + '/db/jobs.txt', 'r') as db:      ####WRITE ITEM IN DB
                 global i
                 i = 0
                 for j in db:

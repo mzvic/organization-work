@@ -18,22 +18,25 @@ class Ui_MainWindow(object):
         self.tableView.setColumnCount(6)
         self.tableView.setHorizontalHeaderLabels(['Index in DB', 'Date Reception', 'Deadline', 'Client', 'Job', 'Additional Comments'])
 
-
+        #################### DELETE SELECTED #####################
         self.delete_job = QtWidgets.QPushButton(self.centralwidget)
         self.delete_job.setGeometry(QtCore.QRect(10, 490, 191, 41))
         self.delete_job.setText("Delete selected job")
         self.delete_job.setObjectName("delete_job")
 
+        #################### MARK AS DONE #######################
         self.mark_done = QtWidgets.QPushButton(self.centralwidget)
         self.mark_done.setGeometry(QtCore.QRect(150, 410, 231, 61))
         self.mark_done.setText("Mark as done")
         self.mark_done.setObjectName("mark_done")
 
+        ################### JOBS CLIENT #############################
         self.jobs_of_client = QtWidgets.QPushButton(self.centralwidget)
         self.jobs_of_client.setGeometry(QtCore.QRect(330, 540, 191, 41))
         self.jobs_of_client.setText("Search jobs of client")
         self.jobs_of_client.setObjectName("jobs_of_client")
 
+        ##################### CLIENT COMBOBOX ########################
         self.client_cb = QtWidgets.QComboBox(self.centralwidget)
         self.client_cb.setGeometry(QtCore.QRect(330, 490, 191, 41))
         self.client_cb.setObjectName("client_cb")
@@ -46,6 +49,7 @@ class Ui_MainWindow(object):
         self.client_cb.setEditable(True)
         self.client_cb.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
 
+        ################ SEEALL JOBS DONE ###########################
         self.all_jobs_done = QtWidgets.QPushButton(self.centralwidget)
         self.all_jobs_done.setGeometry(QtCore.QRect(10, 540, 191, 41))
         self.all_jobs_done.setText("See all jobs done")

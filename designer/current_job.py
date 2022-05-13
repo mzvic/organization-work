@@ -4,8 +4,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import * 
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import * 
-from tinydb import TinyDB, Query
-dbjs = TinyDB('db/db.json')
+import sqlite3 as sl
+import sys, os
+cwd = os.getcwd()
+con = sl.connect("designer/db/sql.db")
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -26,7 +28,8 @@ class Ui_MainWindow(object):
         self.job_to_do_cb = QtWidgets.QComboBox(self.centralwidget)
         self.job_to_do_cb.setGeometry(QtCore.QRect(240, 90, 201, 41))
         self.job_to_do_cb.setObjectName("job_to_do_cb")
-        with open('db/jobs.txt' , 'r') as db:
+
+        with open(cwd + '/db/jobs.txt' , 'r') as db:
             jobs_lines = db.readlines()
             self.job_to_do_cb.addItems(jobs_lines)
         font = QtGui.QFont()
@@ -40,7 +43,7 @@ class Ui_MainWindow(object):
         self.client_cb = QtWidgets.QComboBox(self.centralwidget)
         self.client_cb.setGeometry(QtCore.QRect(240, 30, 201, 41))
         self.client_cb.setObjectName("client_cb")
-        with open('db/clients.txt' , 'r') as db:
+        with open(cwd + '/db/clients.txt' , 'r') as db:
             client_lines = db.readlines()
             self.client_cb.addItems(client_lines)
         font = QtGui.QFont()
@@ -84,11 +87,10 @@ class Ui_MainWindow(object):
         self.add.setObjectName("add")
 
         def add_job_button():
-            with open('db/now.txt', 'r') as dbt:
+            with open(cwd + '/db/now.txt', 'r') as dbt:
                 number = dbt.read()
-            dbjs.insert({'now': number, 'client': self.client_cb.currentText().strip('\n'), 'job': self.job_to_do_cb.currentText().strip('\n'), 
-                    'dl': self.text_dr.toPlainText().strip('\t'), 'dr': self.text_dr.toPlainText().strip('\t'), 'ac': self.text_ac.toPlainText(), 'mode': 'in progress'})
-            with open('db/now.txt', 'w') as dbt:
+            
+            with open(cwd + '/db/now.txt', 'w') as dbt:
                 dbt.write(str(int(number) + 1))
             self.text_ac.setText('')
             self.text_dl.setText('')
