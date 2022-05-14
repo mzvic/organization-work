@@ -37,20 +37,15 @@ class Ui_clientsdatabase(object):
         font.setBold(True)
         font.setWeight(20)
         self.list.setFont(font)
+
         cur.execute("SELECT * FROM clientsdb")
         datos = cur.fetchall()
-        i = 0
-        for j in datos:
-            self.list.insertItem(i, j)
+        global i
+        i = 1
+        for j in list(datos):
+            self.list.insertItem(i, str(j).strip("(),'"))
             i+=1
-        # with open(cwd + '/db/clients.txt') as db:
-        #     global i
-        #     i = 0
-        #     for j in db:
-        #         if j != '\n':
-        #             self.list.insertItem(i, j)
-        #         i+=1
-                
+
         #################### NEW client INPUT ############################
         self.new_client_text = QtWidgets.QPlainTextEdit(self.centralwidget)
         self.new_client_text.setGeometry(QtCore.QRect(290, 80, 181, 31))
@@ -69,22 +64,35 @@ class Ui_clientsdatabase(object):
         self.add_client.setObjectName("add_client")
 
         def add_to_list():
-            with open(cwd + '/db/clients.txt', 'r') as db:
-                new_client_value = self.new_client_text.toPlainText() + '\n'
-                if new_client_value == '\n':
-                    pass
-                # for line in db:
-                #     if new_client_value == line:
-                #         msg_box_name = QMessageBox() 
-                #         msg_box_name.setIcon(QMessageBox.Information) 
-                #         msg_box_name.show()
-                else:
-                    with open(cwd + '/db/clients.txt', 'a') as db:
-                        global i
-                        i+=1
-                        self.list.insertItem(i, self.new_client_text.toPlainText())
-                        db.write('{}\n'.format(self.new_client_text.toPlainText()))
-                        self.new_client_text.setPlainText("")
+
+            new_client_value = self.new_client_text.toPlainText() + '\n'
+            if new_client_value == '\n':
+                pass
+            for line in list(datos):
+                if new_client_value == str(line).strip("'(),"):
+                    msg_box_name = QMessageBox()
+                    msg_box_name.setIcon(QMessageBox.Information) 
+                    msg_box_name.show()
+                else: 
+                    global i
+                    i+=1
+                    self.list.insertItem(i, self.new_client_text.toPlainText())
+                    cur.execute(f"INSERT INTO sql (client) VALUES ({self.new_client_text.toPlainText()})")
+                    con.commit()
+                    self.new_client_text.setPlainText("")
+            #     # for line in db:
+            #     #     if new_client_value == line:
+            #     #         msg_box_name = QMessageBox() 
+            #     #         msg_box_name.setIcon(QMessageBox.Information) 
+            #     #         msg_box_name.show()
+            #     else:
+            #         with open(cwd + '/db/clients.txt', 'a') as db:
+            #             global i
+            #             i+=1
+            #             self.list.insertItem(i, self.new_client_text.toPlainText())
+            #             db.write('{}\n'.format(self.new_client_text.toPlainText()))
+            #             self.new_client_text.setPlainText("")
+        
         self.add_client.clicked.connect(add_to_list)
 
         ################### DELETE client #############################
