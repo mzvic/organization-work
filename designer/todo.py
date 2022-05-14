@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import sqlite3 as sql
+con = sql.connect("designer/db/sql.db")
+cur = con.cursor()
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -40,9 +43,10 @@ class Ui_MainWindow(object):
         self.client_cb = QtWidgets.QComboBox(self.centralwidget)
         self.client_cb.setGeometry(QtCore.QRect(330, 490, 191, 41))
         self.client_cb.setObjectName("client_cb")
-        with open('db/clients.txt' , 'r') as db:
-            clients_lines = db.readlines()
-            self.client_cb.addItems(clients_lines)
+        cur.execute("SELECT * FROM clientsdb")
+        datos = cur.fetchall()
+        self.client_cb.addItems(str(datos))  ###CURRENT PROBLEM HERE
+
         font = QtGui.QFont()
         font.setPointSize(15)
         self.client_cb.setFont(font)

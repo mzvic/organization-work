@@ -3,7 +3,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 import os, sys
+import sqlite3 as sql
 cwd = os.getcwd()  
+con = sql.connect("designer/db/sql.db")
+cur = con.cursor()
 
 class Ui_Jobsdatabase(object):
     def setupUi(self, Jobsdatabase):
@@ -34,13 +37,13 @@ class Ui_Jobsdatabase(object):
         font.setWeight(20)
         self.list.setFont(font)
         
-        with open(cwd + '/db/jobs.txt') as db:
-            global i
-            i = 0
-            for j in db:
-                if j != '\n':
-                    self.list.insertItem(i, j)
-                i+=1
+        cur.execute("SELECT * FROM jobsdb")
+        datos = cur.fetchall()
+        global i
+        i = 1
+        for j in list(datos):
+            self.list.insertItem(i, str(j).strip("(),'"))
+            i+=1
                 
         #################### NEW JOB INPUT ############################
         self.new_job_text = QtWidgets.QPlainTextEdit(self.centralwidget)
@@ -60,22 +63,24 @@ class Ui_Jobsdatabase(object):
         self.add_job.setObjectName("add_job")
 
         def add_to_list():
-            with open(cwd + '/db/jobs.txt', 'r') as db:
-                new_job_value = self.new_job_text.toPlainText() + '\n'
-                if new_job_value == '\n':
-                    pass
-                # for line in db:
-                #     if new_job_value == line:
-                #         msg_box_name = QMessageBox() 
-                #         msg_box_name.setIcon(QMessageBox.Information) 
-                #         msg_box_name.show()
-                else:
-                    with open(cwd + '/db/jobs.txt', 'a') as db:
-                        global i
-                        i+=1
-                        self.list.insertItem(i, self.new_job_text.toPlainText())
-                        db.write('{}\n'.format(self.new_job_text.toPlainText()))
-                        self.new_job_text.setPlainText("")
+            con = sql.connect("designer/db/sql.db")
+            cur = con.cursor()
+            new_job_value = self.new_job_text.toPlainText()
+            if new_job_value == '':
+                pass
+            else:
+                for line in list(datos):
+                    if new_job_value == str(line).strip("'(),"):
+                        self.new_job_text.setPlainText("That job exists")
+                        return 
+
+                global i
+                i+=1
+                self.list.insertItem(i, self.new_job_text.toPlainText())
+                cur.execute(f'INSERT INTO jobsdb (job) VALUES (?)', [self.new_job_text.toPlainText()])
+                con.commit()
+                self.new_job_text.setPlainText("")
+        
         self.add_job.clicked.connect(add_to_list)
 
         ################### DELETE JOB #############################
@@ -85,20 +90,19 @@ class Ui_Jobsdatabase(object):
         self.delete_job.setObjectName("delete_job")
         
         def delete_job():
-            with open(cwd + '/db/jobs.txt', 'r') as db: ####READ DB
-                lines = db.readlines()
-            with open(cwd + '/db/jobs.txt', 'w') as db: ####REWRITE DB WITHOUT VALUE
-                value = str(self.list.currentItem().text())
-                for line in lines:
-                    if line != value:
-                        db.write(line)
-            self.list.clear()                                        ####CLEAR LIST WIDGET
-            with open(cwd + '/db/jobs.txt', 'r') as db:      ####WRITE ITEM IN DB
-                global i
-                i = 0
-                for j in db:
-                    self.list.insertItem(i, j)
-                    i+=1
+            con = sql.connect("designer/db/sql.db")
+            cur = con.cursor()
+            value = self.list.currentItem().text()
+            cur.execute(f"DELETE FROM jobsdb WHERE job = '{value}'")
+            con.commit()
+            self.list.clear()
+            cur.execute("SELECT * FROM jobsdb")
+            datos = cur.fetchall()
+            global i
+            i = 1
+            for j in list(datos):
+                self.list.insertItem(i, str(j).strip("(),'"))
+                i+=1
         self.delete_job.clicked.connect(delete_job) ###############################
             
         ################## DELETE ALL JOBS ############################
@@ -108,9 +112,11 @@ class Ui_Jobsdatabase(object):
         self.delete_all.setObjectName("delete_all")
         Jobsdatabase.setCentralWidget(self.centralwidget)
         def delete_all():
-            with open('db/jobs.txt', 'w') as db:
-                db.close()
-                self.list.clear()
+            con = sql.connect("designer/db/sql.db")
+            cur = con.cursor()
+            cur.execute("DROP TABLE IF EXISTS jobsdb")
+            cur.execute("CREATE TABLE jobsdb (job)")
+            self.list.clear()
         self.delete_all.clicked.connect(delete_all)
         ################################################################
 
