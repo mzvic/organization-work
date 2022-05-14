@@ -3,12 +3,9 @@ import sqlite3 as sq
 con = sq.connect("designer/db/sql.db")
 
 cur = con.cursor()
+value = input()
+cur.execute(f"DELETE FROM clientsdb WHERE client = '{value}' ")
 
-
-cur.execute("SELECT * FROM clientsdb")
-datos = cur.fetchall()
-for a in list(datos):
-    print(a)
 
 con.commit()
 con.close()

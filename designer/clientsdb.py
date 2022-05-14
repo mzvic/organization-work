@@ -64,34 +64,23 @@ class Ui_clientsdatabase(object):
         self.add_client.setObjectName("add_client")
 
         def add_to_list():
-
-            new_client_value = self.new_client_text.toPlainText() + '\n'
-            if new_client_value == '\n':
+            con = sql.connect("designer/db/sql.db")
+            cur = con.cursor()
+            new_client_value = self.new_client_text.toPlainText()
+            if new_client_value == '':
                 pass
-            for line in list(datos):
-                if new_client_value == str(line).strip("'(),"):
-                    msg_box_name = QMessageBox()
-                    msg_box_name.setIcon(QMessageBox.Information) 
-                    msg_box_name.show()
-                else: 
-                    global i
-                    i+=1
-                    self.list.insertItem(i, self.new_client_text.toPlainText())
-                    cur.execute(f"INSERT INTO sql (client) VALUES ({self.new_client_text.toPlainText()})")
-                    con.commit()
-                    self.new_client_text.setPlainText("")
-            #     # for line in db:
-            #     #     if new_client_value == line:
-            #     #         msg_box_name = QMessageBox() 
-            #     #         msg_box_name.setIcon(QMessageBox.Information) 
-            #     #         msg_box_name.show()
-            #     else:
-            #         with open(cwd + '/db/clients.txt', 'a') as db:
-            #             global i
-            #             i+=1
-            #             self.list.insertItem(i, self.new_client_text.toPlainText())
-            #             db.write('{}\n'.format(self.new_client_text.toPlainText()))
-            #             self.new_client_text.setPlainText("")
+            else:
+                for line in list(datos):
+                    if new_client_value == str(line).strip("'(),"):
+                        self.new_client_text.setPlainText("That client exists")
+                        return 
+
+                global i
+                i+=1
+                self.list.insertItem(i, self.new_client_text.toPlainText())
+                cur.execute(f'INSERT INTO clientsdb (client) VALUES (?)', [self.new_client_text.toPlainText()])
+                con.commit()
+                self.new_client_text.setPlainText("")
         
         self.add_client.clicked.connect(add_to_list)
 
@@ -102,20 +91,20 @@ class Ui_clientsdatabase(object):
         self.delete_client.setObjectName("delete_client")
         
         def delete_client():
-            with open(cwd + '/db/clients.txt', 'r') as db: ####READ DB
-                lines = db.readlines()
-            with open(cwd + '/db/clients.txt', 'w') as db: ####REWRITE DB WITHOUT VALUE
-                value = str(self.list.currentItem().text())
-                for line in lines:
-                    if line != value:
-                        db.write(line)
-            self.list.clear()                                        ####CLEAR LIST WIDGET
-            with open(cwd + '/db/clients.txt') as db:      ####WRITE ITEM IN DB
-                global i
-                i = 0
-                for j in db:
-                    self.list.insertItem(i, j)
-                    i+=1
+            con = sql.connect("designer/db/sql.db")
+            cur = con.cursor()
+            value = self.list.currentItem().text()
+            cur.execute(f"DELETE FROM clientsdb WHERE client = '{value}'")
+            con.commit()
+            self.list.clear()
+            cur.execute("SELECT * FROM clientsdb")
+            datos = cur.fetchall()
+            global i
+            i = 1
+            for j in list(datos):
+                self.list.insertItem(i, str(j).strip("(),'"))
+                i+=1
+
         self.delete_client.clicked.connect(delete_client) ###############################
             
         ################## DELETE ALL clients ############################
@@ -124,10 +113,13 @@ class Ui_clientsdatabase(object):
         self.delete_all.setText("Delete All Clients")
         self.delete_all.setObjectName("delete_all")
         clientsdatabase.setCentralWidget(self.centralwidget)
+
         def delete_all():
-            with open('db/clients.txt', 'w') as db:
-                db.close()
-                self.list.clear()
+            con = sql.connect("designer/db/sql.db")
+            cur = con.cursor()
+            cur.execute("DROP TABLE IF EXISTS clientsdb")
+            cur.execute("CREATE TABLE clientsdb (client)")
+            self.list.clear()
         self.delete_all.clicked.connect(delete_all)
         ################################################################
 
