@@ -18,8 +18,8 @@ class Ui_MainWindow(object):
         self.tableView = QtWidgets.QTableWidget(self.centralwidget)
         self.tableView.setGeometry(QtCore.QRect(10, 10, 521, 391))
         self.tableView.setObjectName("tableView")
-        self.tableView.setColumnCount(6)
-        self.tableView.setHorizontalHeaderLabels(['Index in DB', 'Date Reception', 'Deadline', 'Client', 'Job', 'Additional Comments'])
+        self.tableView.setColumnCount(5)
+        self.tableView.setHorizontalHeaderLabels(['Client', 'Job', 'Date Reception', 'Deadline', 'Additional Comments'])
 
         #################### DELETE SELECTED #####################
         self.delete_job = QtWidgets.QPushButton(self.centralwidget)
@@ -45,7 +45,8 @@ class Ui_MainWindow(object):
         self.client_cb.setObjectName("client_cb")
         cur.execute("SELECT * FROM clientsdb")
         datos = cur.fetchall()
-        self.client_cb.addItems(str(datos))  ###CURRENT PROBLEM HERE
+        for i in datos:
+            self.client_cb.addItems(i)
 
         font = QtGui.QFont()
         font.setPointSize(15)

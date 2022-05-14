@@ -12,7 +12,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(800, 600))
         MainWindow.setMaximumSize(QtCore.QSize(800, 600))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("LogoDefault.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("/designer/LogoDefault.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setMinimumSize(QtCore.QSize(800, 600))
@@ -25,20 +25,20 @@ class Ui_MainWindow(object):
         self.jobs.setAutoFillBackground(False)
         self.jobs.setObjectName("jobs")
         self.jobs.clicked.connect(lambda: os.system('python3 '       #BUTTON
-                                + os.getcwd() + '/jobsdb.py'))
+                                + os.getcwd() + '/designer/jobsdb.py'))
         ######################CLIENTS###########################
         self.clients = QtWidgets.QPushButton(self.centralwidget)
         self.clients.setGeometry(QtCore.QRect(630, 450, 150, 61))
         self.clients.setObjectName("clients")
         self.clients.clicked.connect(lambda: os.system('python3 '       #BUTTON
-                                + os.getcwd() + '/clientsdb.py'))
+                                + os.getcwd() + '/designer/clientsdb.py'))
 
         #####################CURRENT JOB###############################
         self.add_current_job = QtWidgets.QPushButton(self.centralwidget)
         self.add_current_job.setGeometry(QtCore.QRect(430, 450, 150, 61))
         self.add_current_job.setObjectName("add_current_job")
         self.add_current_job.clicked.connect(lambda: os.system('python3 '       #BUTTON
-                                + os.getcwd() + '/current_job.py'))
+                                + os.getcwd() + '/designer/current_job.py'))
 
         #######################TO DO##########################
         self.to_do = QtWidgets.QPushButton(self.centralwidget)
@@ -49,7 +49,7 @@ class Ui_MainWindow(object):
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(300, 100, 200, 200))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("LogoDefault.png"))
+        self.label.setPixmap(QtGui.QPixmap("/designer/LogoDefault.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         MainWindow.setCentralWidget(self.centralwidget)
