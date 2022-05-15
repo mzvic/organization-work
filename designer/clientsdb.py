@@ -63,7 +63,7 @@ class Ui_clientsdatabase(object):
         self.add_client.setText("Add Client")
         self.add_client.setObjectName("add_client")
 
-        def add_to_list():
+        def add_to_list_and_new_table():
             con = sql.connect("designer/db/sql.db")
             cur = con.cursor()
             new_client_value = self.new_client_text.toPlainText()
@@ -78,11 +78,19 @@ class Ui_clientsdatabase(object):
                 global i
                 i+=1
                 self.list.insertItem(i, self.new_client_text.toPlainText())
+                if " " in new_client_value:
+                    name = new_client_value.replace(" ", "_")
+                else:
+                    name = new_client_value
                 cur.execute(f'INSERT INTO clientsdb (client) VALUES (?)', [self.new_client_text.toPlainText()])
+                cur.execute(f"CREATE TABLE {name} (client, job, stat, dr, dl, ac)")
                 con.commit()
+
+            
                 self.new_client_text.setPlainText("")
+            
         
-        self.add_client.clicked.connect(add_to_list)
+        self.add_client.clicked.connect(add_to_list_and_new_table)
 
         ################### DELETE client #############################
         self.delete_client = QtWidgets.QPushButton(self.centralwidget)
@@ -95,6 +103,21 @@ class Ui_clientsdatabase(object):
             cur = con.cursor()
             value = self.list.currentItem().text()
             cur.execute(f"DELETE FROM clientsdb WHERE client = '{value}'")
+            if " " in value:
+                value2 = value.replace("_", "")   # C
+                cur.execute(f"DROP TABLE {value2}")
+            else:
+
+            
+
+            # cur.execute(f"SELECT name FROM sqlite_master WHERE type='table'")
+            # tables = cur.fetchall()
+            # for x in range(len(tables)):
+
+            # print(len(tables))
+            # table = str(tables[0])
+            # print(table.strip("()',"))
+            
             con.commit()
             self.list.clear()
             cur.execute("SELECT * FROM clientsdb")
@@ -119,6 +142,7 @@ class Ui_clientsdatabase(object):
             cur = con.cursor()
             cur.execute("DROP TABLE IF EXISTS clientsdb")
             cur.execute("CREATE TABLE clientsdb (client)")
+
             self.list.clear()
         self.delete_all.clicked.connect(delete_all)
         ################################################################

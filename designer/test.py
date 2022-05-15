@@ -3,9 +3,12 @@ import sqlite3 as sq
 con = sq.connect("designer/db/sql.db")
 
 cur = con.cursor()
-value = ["generic value 5"]
-g = 'generic'
-cur.execute(f"INSERT INTO all_works VALUES ('{g} client', '{g} job', '{g} status', '{g} dr', '{g} dl', '{g} ac')")
+
+cur.execute(f"SELECT name FROM sqlite_master WHERE type='table'")
+tables = cur.fetchall()
+print(len(tables))
+table = str(tables[0])
+print(table.strip("()',"))
 
 con.commit()
 con.close()
