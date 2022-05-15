@@ -14,12 +14,19 @@ class Ui_MainWindow(object):
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-
+        
         self.tableView = QtWidgets.QTableWidget(self.centralwidget)
         self.tableView.setGeometry(QtCore.QRect(10, 10, 521, 391))
         self.tableView.setObjectName("tableView")
-        self.tableView.setColumnCount(5)
-        self.tableView.setHorizontalHeaderLabels(['Client', 'Job', 'Date Reception', 'Deadline', 'Additional Comments'])
+        self.tableView.setColumnCount(6)
+        cur.execute("SELECT COUNT(*) FROM all_works")
+        number_str = str(cur.fetchall())
+        number = int(number_str.strip(" ()[],' "))
+        self.tableView.setRowCount(number) #CURRENT PROBLEM HERE
+        self.tableView.setHorizontalHeaderLabels(['Client', 'Job', 'Status', 'Date Reception', 'Deadline', 'Additional Comments'])
+        for j in range(6):
+            for i in range(number):
+                self.tableView.setItem(i, j, QtWidgets.QTableWidgetItem("PLEASE"))
 
         #################### DELETE SELECTED #####################
         self.delete_job = QtWidgets.QPushButton(self.centralwidget)

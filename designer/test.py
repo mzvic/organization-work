@@ -4,8 +4,8 @@ con = sq.connect("designer/db/sql.db")
 
 cur = con.cursor()
 value = ["generic value 5"]
-cur.execute("CREATE TABLE all_works ()")
-
+g = 'generic'
+cur.execute(f"INSERT INTO all_works VALUES ('{g} client', '{g} job', '{g} status', '{g} dr', '{g} dl', '{g} ac')")
 
 con.commit()
 con.close()
