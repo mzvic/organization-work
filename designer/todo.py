@@ -22,11 +22,16 @@ class Ui_MainWindow(object):
         cur.execute("SELECT COUNT(*) FROM all_works")
         number_str = str(cur.fetchall())
         number = int(number_str.strip(" ()[],' "))
-        self.tableView.setRowCount(number) #CURRENT PROBLEM HERE
+        self.tableView.setRowCount(number)
         self.tableView.setHorizontalHeaderLabels(['Client', 'Job', 'Status', 'Date Reception', 'Deadline', 'Additional Comments'])
-        for j in range(6):
-            for i in range(number):
-                self.tableView.setItem(i, j, QtWidgets.QTableWidgetItem("PLEASE"))
+        cur.execute("SELECT * FROM all_works")
+        row = cur.fetchall()
+        
+        for i in range(6):
+            for j in range(number):
+                self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i]))
+                
+        
 
         #################### DELETE SELECTED #####################
         self.delete_job = QtWidgets.QPushButton(self.centralwidget)
@@ -34,11 +39,48 @@ class Ui_MainWindow(object):
         self.delete_job.setText("Delete selected job")
         self.delete_job.setObjectName("delete_job")
 
+        def delete_selected():
+            asd = self.tableView.currentRow()
+            query = f"DELETE FROM all_works WHERE rowid = ?"
+            cur.execute(query, str(self.tableView.currentRow() + 1))
+            con.commit()
+            self.tableView.clearContents()
+            cur.execute("SELECT COUNT(*) FROM all_works")
+
+            number_str = str(cur.fetchall())
+            number = int(number_str.strip(" ()[],' "))
+
+            cur.execute("SELECT * FROM all_works")
+            row = cur.fetchall()
+
+            for i in range(6):
+                for j in range(number):
+                    self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i]))
+
+        self.delete_job.clicked.connect(delete_selected)
+
         #################### MARK AS DONE #######################
         self.mark_done = QtWidgets.QPushButton(self.centralwidget)
         self.mark_done.setGeometry(QtCore.QRect(150, 410, 231, 61))
         self.mark_done.setText("Mark as done")
         self.mark_done.setObjectName("mark_done")
+
+        def update():
+            query = f"UPDATE all_works SET stat = 'Done' WHERE rowid = {self.tableView.currentRow() + 1}"
+            cur.execute(query)
+            con.commit()
+
+            cur.execute("SELECT COUNT(*) FROM all_works")
+            number_str = str(cur.fetchall())
+            number = int(number_str.strip(" ()[],' "))
+            cur.execute("SELECT * FROM all_works")
+            row = cur.fetchall()
+        
+            for i in range(6):
+                for j in range(number):
+                    self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i]))
+
+        self.mark_done.clicked.connect(update)
 
         ################### JOBS CLIENT #############################
         self.jobs_of_client = QtWidgets.QPushButton(self.centralwidget)
