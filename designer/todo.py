@@ -29,7 +29,7 @@ class Ui_MainWindow(object):
         
         for i in range(6):
             for j in range(number):
-                self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i]))
+                self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i + 1]))
                 
         
 
@@ -41,7 +41,7 @@ class Ui_MainWindow(object):
 
         def delete_selected():
             asd = self.tableView.currentRow()
-            query = f"DELETE FROM all_works WHERE rowid = ?"
+            query = f"DELETE FROM all_works WHERE id = ?"
             cur.execute(query, str(self.tableView.currentRow() + 1))
             con.commit()
             self.tableView.clearContents()
@@ -55,7 +55,7 @@ class Ui_MainWindow(object):
 
             for i in range(6):
                 for j in range(number):
-                    self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i]))
+                    self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i +1]))
 
         self.delete_job.clicked.connect(delete_selected)
 
@@ -66,7 +66,8 @@ class Ui_MainWindow(object):
         self.mark_done.setObjectName("mark_done")
 
         def update():
-            query = f"UPDATE all_works SET stat = 'Done' WHERE rowid = {self.tableView.currentRow() + 1}"
+            
+            query = f"UPDATE all_works SET stat = 'Done' WHERE id = {self.tableView.currentRow() + 1}"
             cur.execute(query)
             con.commit()
 
@@ -78,7 +79,7 @@ class Ui_MainWindow(object):
         
             for i in range(6):
                 for j in range(number):
-                    self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i]))
+                    self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i+1]))
 
         self.mark_done.clicked.connect(update)
 
