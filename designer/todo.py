@@ -44,7 +44,6 @@ class Ui_MainWindow(object):
             list = []
             for i in range(6):
                 list.append(self.tableView.item(current_row,i).text())
-            print(list)
 
             query = f"DELETE FROM all_works WHERE client = '{list[0]}' AND job = '{list[1]}' AND stat='{list[2]}' AND dr = '{list[3]}' AND dl = '{list[4]}' AND ac = '{list[5]}' "
             cur.execute(query)
@@ -72,8 +71,14 @@ class Ui_MainWindow(object):
         self.mark_done.setObjectName("mark_done")
 
         def update():
+
+            current_row = self.tableView.currentRow()
+            list = []
+            for i in range(6):
+                list.append(self.tableView.item(current_row,i).text())
             
-            query = f"UPDATE all_works SET stat = 'Done' WHERE id = {self.tableView.currentRow() + 1}"
+
+            query = f"UPDATE all_works SET stat = 'Done' WHERE client = '{list[0]}' AND job = '{list[1]}' AND stat='{list[2]}' AND dr = '{list[3]}' AND dl = '{list[4]}' AND ac = '{list[5]}' "
             cur.execute(query)
             con.commit()
 
@@ -89,11 +94,6 @@ class Ui_MainWindow(object):
 
         self.mark_done.clicked.connect(update)
 
-        ################### JOBS CLIENT #############################
-        self.jobs_of_client = QtWidgets.QPushButton(self.centralwidget)
-        self.jobs_of_client.setGeometry(QtCore.QRect(330, 540, 191, 41))
-        self.jobs_of_client.setText("Search jobs of client")
-        self.jobs_of_client.setObjectName("jobs_of_client")
 
         ##################### CLIENT COMBOBOX ########################
         self.client_cb = QtWidgets.QComboBox(self.centralwidget)
@@ -110,12 +110,39 @@ class Ui_MainWindow(object):
         self.client_cb.setEditable(True)
         self.client_cb.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
 
-        ################ SEEALL JOBS DONE ###########################
+        ################### JOBS CLIENT #############################
+        self.jobs_of_client = QtWidgets.QPushButton(self.centralwidget)
+        self.jobs_of_client.setGeometry(QtCore.QRect(330, 540, 191, 41))
+        self.jobs_of_client.setText("Search jobs of client")
+        self.jobs_of_client.setObjectName("jobs_of_client")
+
+        def show_client_jobs():
+            cur.execute(f"SELECT * FROM all_works WHERE client = '{self.client_cb.currentText()}' ")
+            conditional = cur.fetchall()
+            self.tableView.clearContents()
+
+            for i in range(6):
+                for j in range(len(conditional)):
+                    self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(conditional[j][i+1]))
+
+        self.jobs_of_client.clicked.connect(show_client_jobs)
+
+        ################ SEE ALL JOBS DONE ###########################
         self.all_jobs_done = QtWidgets.QPushButton(self.centralwidget)
         self.all_jobs_done.setGeometry(QtCore.QRect(10, 540, 191, 41))
         self.all_jobs_done.setText("See all jobs done")
         self.all_jobs_done.setObjectName("all_jobs_done")
+        def show_jobs_done():
+            cur.execute("SELECT * FROM all_works WHERE stat = 'Done' ")
+            row = cur.fetchall()
+            self.tableView.clearContents()
 
+            for i in range(6):
+                for j in range(len(row)):
+                    self.tableView.setItem(j, i, QtWidgets.QTableWidgetItem(row[j][i+1]))
+
+
+        self.all_jobs_done.clicked.connect(show_jobs_done)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)

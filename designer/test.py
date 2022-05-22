@@ -4,7 +4,7 @@ con = sq.connect("designer/db/sql.db")
 
 cur = con.cursor()
 
-row = ('1111', '2222' , '3333', '4444', '5555', '6666')
+row = ('generic client 3', '222' , '333', '444', '555', '666')
 cur.execute(f"INSERT INTO all_works (client, job, stat, dr, dl, ac) VALUES (?,?,?,?,?,?) ", row)
 # cur.execute("DELETE FROM all_works ")
 
