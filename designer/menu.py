@@ -44,6 +44,9 @@ class Ui_MainWindow(object):
         self.to_do = QtWidgets.QPushButton(self.centralwidget)
         self.to_do.setGeometry(QtCore.QRect(220, 450, 150, 61))
         self.to_do.setObjectName("to_do")
+        self.to_do.clicked.connect(lambda: os.system('python3 '       #BUTTON
+                                + os.getcwd() + '/designer/todo.py'))
+
         ######################################################
 
         self.label = QtWidgets.QLabel(self.centralwidget)
