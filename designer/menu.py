@@ -2,7 +2,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os
-import jobsdb
+
 
 
 class Ui_MainWindow(object):
@@ -12,7 +12,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(800, 600))
         MainWindow.setMaximumSize(QtCore.QSize(800, 600))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("/designer/LogoDefault.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("designer/LogoDefault.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setMinimumSize(QtCore.QSize(800, 600))
@@ -52,7 +52,7 @@ class Ui_MainWindow(object):
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(300, 100, 200, 200))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("/designer/LogoDefault.png"))
+        self.label.setPixmap(QtGui.QPixmap("designer/LogoDefault.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         MainWindow.setCentralWidget(self.centralwidget)
