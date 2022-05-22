@@ -8,6 +8,7 @@ import sqlite3 as sl
 import sys, os
 cwd = os.getcwd()
 con = sl.connect("designer/db/sql.db")
+cur = con.cursor()
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -22,16 +23,18 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
 
         
-        ################### CALENDAR BUTTON
+        ################### CALENDAR BUTTON ########################
         
         ############# COMBOBOX JOB TO DO #########################
         self.job_to_do_cb = QtWidgets.QComboBox(self.centralwidget)
         self.job_to_do_cb.setGeometry(QtCore.QRect(240, 90, 201, 41))
         self.job_to_do_cb.setObjectName("job_to_do_cb")
 
-        with open(cwd + '/db/jobs.txt' , 'r') as db:
-            jobs_lines = db.readlines()
-            self.job_to_do_cb.addItems(jobs_lines)
+        cur.execute(f"SELECT * FROM jobsdb")
+        all = cur.fetchall()
+        for i in all:
+            self.job_to_do_cb.addItems(i)
+
         font = QtGui.QFont()
         font.setPointSize(15)
         self.job_to_do_cb.setFont(font)
@@ -43,9 +46,13 @@ class Ui_MainWindow(object):
         self.client_cb = QtWidgets.QComboBox(self.centralwidget)
         self.client_cb.setGeometry(QtCore.QRect(240, 30, 201, 41))
         self.client_cb.setObjectName("client_cb")
-        with open(cwd + '/db/clients.txt' , 'r') as db:
-            client_lines = db.readlines()
-            self.client_cb.addItems(client_lines)
+
+
+        cur.execute(f"SELECT * FROM clientsdb")
+        all = cur.fetchall()
+        for i in all:
+            self.client_cb.addItems(i)
+
         font = QtGui.QFont()
         font.setPointSize(15)
         self.client_cb.setFont(font)
@@ -87,15 +94,13 @@ class Ui_MainWindow(object):
         self.add.setObjectName("add")
 
         def add_job_button():
-            with open(cwd + '/db/now.txt', 'r') as dbt:
-                number = dbt.read()
-            
-            with open(cwd + '/db/now.txt', 'w') as dbt:
-                dbt.write(str(int(number) + 1))
-            self.text_ac.setText('')
-            self.text_dl.setText('')
-            self.text_dr.setText('')
-            
+            client_to_add = self.client_cb.currentText()
+            job_to_add = self.job_to_do_cb.currentText()
+            dl_to_add = self.text_dl.toPlainText()
+            dr_to_add = self.text_dr.toPlainText()
+            ac_to_add = self.text_ac.toPlainText()
+            cur.execute(f"INSERT INTO all_works (client, job, stat, dr, dl, ac) VALUES ('{client_to_add}','{job_to_add}','Not Done','{dl_to_add}','{dr_to_add}','{ac_to_add}') ")            
+            con.commit()
         self.add.clicked.connect(add_job_button)
 
         ########################################################3

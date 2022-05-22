@@ -83,7 +83,6 @@ class Ui_clientsdatabase(object):
                 else:
                     name = new_client_value
                 cur.execute(f'INSERT INTO clientsdb (client) VALUES (?)', [self.new_client_text.toPlainText()])
-                cur.execute(f"CREATE TABLE {name} (client, job, stat, dr, dl, ac)")
                 con.commit()
 
             
@@ -103,12 +102,6 @@ class Ui_clientsdatabase(object):
             cur = con.cursor()
             value = self.list.currentItem().text()
             cur.execute(f"DELETE FROM clientsdb WHERE client = '{value}'")
-            if " " in value:
-                value2 = value.replace(" ","_")
-                cur.execute(f"DROP TABLE '{value2}'")
-            else:
-                
-                cur.execute(f"DROP TABLE '{value}'")
             
 
             # cur.execute(f"SELECT name FROM sqlite_master WHERE type='table'")
@@ -141,17 +134,6 @@ class Ui_clientsdatabase(object):
         def delete_all():
             con = sql.connect("designer/db/sql.db")
             cur = con.cursor()
-            
-
-            cur.execute(f"SELECT name FROM sqlite_master WHERE type='table'")
-            tables = cur.fetchall()
-            
-            for i in tables:
-                str_clean = str(i).strip("(),'")
-                if str_clean == "jobsdb" or str_clean == "all_works" or str_clean == "clientsdb":
-                    pass
-                else:
-                    cur.execute(f"DROP TABLE '{str_clean}'")
             cur.execute("DROP TABLE IF EXISTS clientsdb")
             cur.execute("CREATE TABLE clientsdb (client)")
             con.commit()
