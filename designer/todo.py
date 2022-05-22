@@ -40,10 +40,16 @@ class Ui_MainWindow(object):
         self.delete_job.setObjectName("delete_job")
 
         def delete_selected():
-            asd = self.tableView.currentRow()
-            query = f"DELETE FROM all_works WHERE id = ?"
-            cur.execute(query, str(self.tableView.currentRow() + 1))
+            current_row = self.tableView.currentRow()
+            list = []
+            for i in range(6):
+                list.append(self.tableView.item(current_row,i).text())
+            print(list)
+
+            query = f"DELETE FROM all_works WHERE client = '{list[0]}' AND job = '{list[1]}' AND stat='{list[2]}' AND dr = '{list[3]}' AND dl = '{list[4]}' AND ac = '{list[5]}' "
+            cur.execute(query)
             con.commit()
+
             self.tableView.clearContents()
             cur.execute("SELECT COUNT(*) FROM all_works")
 
