@@ -17,7 +17,7 @@ This project is optimized to Linux/MacOs, but it can also work in Windows or oth
 To make it run you need to install:
 - PyQt5
 ```
-pip3 install pyqt5
+pip install pyqt5
 ```
 
 
@@ -25,7 +25,7 @@ pip3 install pyqt5
 
 Clone the code in a folder then execute 'meny.py' with:
 ```
-python3 designer/menu.py
+python designer/menu.py
 ```
 ## How this works?
 
