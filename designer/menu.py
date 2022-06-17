@@ -24,27 +24,31 @@ class Ui_MainWindow(object):
         self.jobs.setGeometry(QtCore.QRect(20, 450, 150, 61))
         self.jobs.setAutoFillBackground(False)
         self.jobs.setObjectName("jobs")
-        self.jobs.clicked.connect(lambda: os.system('python3 '       #BUTTON
+        try:
+            self.jobs.clicked.connect(lambda: os.system('python '       #BUTTON
+                                + os.getcwd() + '/designer/jobsdb.py'))
+        except:
+            self.jobs.clicked.connect(lambda: os.system('python '       #BUTTON
                                 + os.getcwd() + '/designer/jobsdb.py'))
         ######################CLIENTS###########################
         self.clients = QtWidgets.QPushButton(self.centralwidget)
         self.clients.setGeometry(QtCore.QRect(630, 450, 150, 61))
         self.clients.setObjectName("clients")
-        self.clients.clicked.connect(lambda: os.system('python3 '       #BUTTON
+        self.clients.clicked.connect(lambda: os.system('python '       #BUTTON
                                 + os.getcwd() + '/designer/clientsdb.py'))
 
         #####################CURRENT JOB###############################
         self.add_current_job = QtWidgets.QPushButton(self.centralwidget)
         self.add_current_job.setGeometry(QtCore.QRect(430, 450, 150, 61))
         self.add_current_job.setObjectName("add_current_job")
-        self.add_current_job.clicked.connect(lambda: os.system('python3 '       #BUTTON
+        self.add_current_job.clicked.connect(lambda: os.system('python '       #BUTTON
                                 + os.getcwd() + '/designer/current_job.py'))
 
         #######################TO DO##########################
         self.to_do = QtWidgets.QPushButton(self.centralwidget)
         self.to_do.setGeometry(QtCore.QRect(220, 450, 150, 61))
         self.to_do.setObjectName("to_do")
-        self.to_do.clicked.connect(lambda: os.system('python3 '       #BUTTON
+        self.to_do.clicked.connect(lambda: os.system('python '       #BUTTON
                                 + os.getcwd() + '/designer/todo.py'))
 
         ######################################################

@@ -13,7 +13,7 @@ class Ui_Jobsdatabase(object):
         Jobsdatabase.setObjectName("Jobsdatabase")
         Jobsdatabase.resize(500, 600)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("LogoDefault.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("designer/LogoDefault.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Jobsdatabase.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(Jobsdatabase)
         self.centralwidget.setObjectName("centralwidget")
