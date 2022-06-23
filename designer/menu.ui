@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>LogoDefault.png</normaloff>LogoDefault.png</iconset>
+    <normaloff>logo.png</normaloff>logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="minimumSize">
@@ -110,7 +110,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>LogoDefault.png</pixmap>
+     <pixmap>logo.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>

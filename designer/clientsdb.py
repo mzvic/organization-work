@@ -14,7 +14,7 @@ class Ui_clientsdatabase(object):
         clientsdatabase.setObjectName("clientsdatabase")
         clientsdatabase.resize(500, 600)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("designer/LogoDefault.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("designer/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         clientsdatabase.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(clientsdatabase)
         self.centralwidget.setObjectName("centralwidget")

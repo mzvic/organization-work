@@ -12,7 +12,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(800, 600))
         MainWindow.setMaximumSize(QtCore.QSize(800, 600))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("designer/LogoDefault.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("designer/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setMinimumSize(QtCore.QSize(800, 600))
@@ -56,10 +56,22 @@ class Ui_MainWindow(object):
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(300, 100, 200, 200))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("designer/LogoDefault.png"))
+        self.label.setPixmap(QtGui.QPixmap("designer/logo.png"))
+        self.label.setStyleSheet("border: 1px solid black;")
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         MainWindow.setCentralWidget(self.centralwidget)
+
+        ######################################################
+
+        self.label2 = QtWidgets.QPushButton(self.centralwidget)
+        self.label2.setGeometry(QtCore.QRect(325, 300, 150, 61))
+        self.label2.setText("README")
+        self.label2.setStyleSheet("background-color: #f0f0f0; border: 0px;")
+        self.label2.clicked.connect(lambda: os.system('README.pdf'))
+        self.label2.setObjectName("readme")
+        MainWindow.setCentralWidget(self.centralwidget)
+        
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -72,6 +84,8 @@ class Ui_MainWindow(object):
         self.add_current_job.setText(_translate("MainWindow", "New Current Job"))
         self.to_do.setText(_translate("MainWindow", "To do"))
 
+    def open_pdf():
+        os.system("README.pdf")
 
 
 if __name__ == "__main__":
