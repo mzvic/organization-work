@@ -1,3 +1,2 @@
-cd designer
-python3 menu.py
+python3 designer/menu.py
 
